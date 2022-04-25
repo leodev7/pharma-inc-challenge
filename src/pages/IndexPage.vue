@@ -17,7 +17,7 @@
 
         <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero dolor labore velit quasi dolore eaque voluptatum voluptatibus. Similique ipsum itaque laboriosam magnam saep.</h5>
 
-        <q-table class="no-shadow" binary-state-sort hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :rows-per-page-options="[0]" @request="onLoadCurrentFilter" >
+        <q-table class="no-shadow" hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :pagination="pagination" :rows-per-page-label="'50'" @request="onLoadCurrentFilter" >
 
           <template v-slot:top>
             <q-input dense outlined square color="dark" class="full-width" v-model="title" label="Search">
@@ -44,10 +44,10 @@
             </q-tr>
           </template>
 
-          <template v-slot:bottom>
-            <div class="col-12 q-my-md">
+          <template v-slot:bottom="scope">
+            <div class="col-12 q-my-md" v-if="scope.pagination.rowsPerPage < this.limitCount">
               <div class="flex justify-center">
-                <q-btn flat class="text-capitalize" color="purple" label="Loading more..." @click="loadingMore()" />
+                <q-btn flat class="text-capitalize" color="purple" label="Loading more..." @click="loadingMore(scope)" />
               </div>
             </div>
           </template>
@@ -83,7 +83,15 @@ export default {
         { align:'center', name: 'gender', field: 'gender', label: 'Gender' },
         { align:'center', name: 'birth', field: rows => rows.dob.date, label: 'Birth' },
         { align:'center', name: 'action', field: 'action', label: 'Actions' }
-      ]
+      ],
+      limitCount: 50,
+
+      pagination: {
+        sortBy: 'desc',
+        descending: false,
+        page: 1,
+        rowsPerPage: 10
+      }
     }
   },
 
@@ -94,13 +102,17 @@ export default {
   methods: {
 
     onLoadCurrentFilter () {
-      this.$axios({ method: 'get', url: 'https://randomuser.me/api/' })
+      this.$axios({ method: 'get', url: `https://randomuser.me/api/?results=${this.limitCount}&nat=us,br` })
         .then((response) => {
           this.pharmaData = response.data.results
         })
         .catch((err) => {
           console.log(err)
         })
+    },
+
+    loadingMore (variable) {
+      variable.pagination.rowsPerPage += 10
     },
 
     dateFormated (value) {
