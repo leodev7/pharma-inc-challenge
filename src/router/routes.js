@@ -2,9 +2,9 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('pages/IndexPage.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      { path: 'user/:pacientId', name: 'r_pacient_view', component: () => import('components/ModalPacientView.vue') }
     ]
   },
 

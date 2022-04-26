@@ -1,7 +1,9 @@
 <template>
-  <div class="q-pa-md">
+  <q-layout class="q-pa-md">
+    <router-view />
+
     <q-header>
-      <q-toolbar class="bg-primary text-white">
+        <q-toolbar class="bg-primary text-white">
         <q-avatar>
           <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
         </q-avatar>
@@ -17,7 +19,7 @@
 
         <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero dolor labore velit quasi dolore eaque voluptatum voluptatibus. Similique ipsum itaque laboriosam magnam saep.</h5>
 
-        <q-table class="no-shadow" hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :pagination="pagination" :rows-per-page-label="'50'" @request="onLoadCurrentFilter" >
+        <q-table class="no-shadow" separator="cell" hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :pagination="pagination" :rows-per-page-label="'50'" @request="onLoadCurrentFilter" >
 
           <template v-slot:top>
             <q-input dense outlined square color="dark" class="full-width" v-model="title" label="Search">
@@ -39,7 +41,7 @@
                 <p>{{ dateFormated(props.row.dob.date) }} - {{ props.row.dob.age }} anos</p>
               </q-td>
               <q-td :props="props" key="action">
-                <q-btn color="dark" size="sm" label="Visualizar" class="text-capitalize" />
+                <q-btn color="dark" size="sm" label="Visualizar" class="text-capitalize" :to="{ name: 'r_pacient_view', params: { pacientId: props.row.login.uuid }}" />
               </q-td>
             </q-tr>
           </template>
@@ -65,7 +67,7 @@
       </div>
     </div>
 
-  </div>
+  </q-layout>
 </template>
 
 <script>
@@ -117,6 +119,12 @@ export default {
 
     dateFormated (value) {
       return date.formatDate(value, 'DD/MM/YYYY')
+    },
+
+    goToPacientView (pacientData) {
+      console.log(pacientData.params.id)
+      this.$router.push({ name: 'r_pacient_view', params: { pacientId: pacientData.params.id.login.uuid } })
+
     }
   }
 }
