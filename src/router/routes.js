@@ -2,9 +2,10 @@
 const routes = [
   {
     path: '/',
+    name: 'r_home',
     component: () => import('pages/IndexPage.vue'),
     children: [
-      { path: 'user/:pacientId', name: 'r_pacient_view', component: () => import('components/ModalPacientView.vue') }
+      { path: 'user/:pacientId', name: 'r_pacient_view', props: true, component: () => import('components/ModalPacientView.vue') }
     ]
   },
 

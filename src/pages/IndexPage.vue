@@ -3,7 +3,7 @@
     <router-view />
 
     <q-header>
-        <q-toolbar class="bg-primary text-white">
+      <q-toolbar class="bg-primary text-white">
         <q-avatar>
           <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
         </q-avatar>
@@ -19,7 +19,7 @@
 
         <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero dolor labore velit quasi dolore eaque voluptatum voluptatibus. Similique ipsum itaque laboriosam magnam saep.</h5>
 
-        <q-table class="no-shadow" separator="cell" hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :pagination="pagination" :rows-per-page-label="'50'" @request="onLoadCurrentFilter" >
+        <q-table class="no-shadow" binary-state-sort separator="cell" hide-pagination row-key="id" :rows="pharmaData" :columns="pharmaColumns" :pagination="pagination" :rows-per-page-label="'50'" @request="onLoadCurrentFilter" >
 
           <template v-slot:top>
             <q-input dense outlined square color="dark" class="full-width" v-model="title" label="Search">
@@ -41,7 +41,7 @@
                 <p>{{ dateFormated(props.row.dob.date) }} - {{ props.row.dob.age }} anos</p>
               </q-td>
               <q-td :props="props" key="action">
-                <q-btn color="dark" size="sm" label="Visualizar" class="text-capitalize" :to="{ name: 'r_pacient_view', params: { pacientId: props.row.login.uuid }}" />
+                <q-btn color="dark" size="sm" label="View" class="text-capitalize" :to="{ name: 'r_pacient_view', params: { pacientData: JSON.stringify([props.row]), pacientId: props.row.login.uuid }}" />
               </q-td>
             </q-tr>
           </template>
@@ -49,7 +49,7 @@
           <template v-slot:bottom="scope">
             <div class="col-12 q-my-md" v-if="scope.pagination.rowsPerPage < this.limitCount">
               <div class="flex justify-center">
-                <q-btn flat class="text-capitalize" color="purple" label="Loading more..." @click="loadingMore(scope)" />
+                <q-btn flat class="text-capitalize" color="purple" label="Loading more..." icon="refresh" @click="loadingMore(scope)" />
               </div>
             </div>
           </template>
@@ -119,12 +119,6 @@ export default {
 
     dateFormated (value) {
       return date.formatDate(value, 'DD/MM/YYYY')
-    },
-
-    goToPacientView (pacientData) {
-      console.log(pacientData.params.id)
-      this.$router.push({ name: 'r_pacient_view', params: { pacientId: pacientData.params.id.login.uuid } })
-
     }
   }
 }
@@ -136,4 +130,7 @@ export default {
   max-width: 50vw
   margin: 3rem auto 0
 
+@media (max-width: 500px)
+  .container
+    max-width: 90vw
 </style>
